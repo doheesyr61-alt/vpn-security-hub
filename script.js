@@ -1,4 +1,4 @@
-// Hamburger Menu Toggle
+// Hamburger Menu
 const hamburger = document.querySelector('.hamburger');
 const navLinks = document.querySelector('.nav-links');
 
@@ -8,7 +8,6 @@ if (hamburger) {
     });
 }
 
-// Close mobile menu when a link is clicked
 const navItems = document.querySelectorAll('.nav-links a');
 navItems.forEach(item => {
     item.addEventListener('click', () => {
@@ -16,7 +15,7 @@ navItems.forEach(item => {
     });
 });
 
-// Smooth Scrolling for Navigation Links
+// Smooth Scrolling
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
         e.preventDefault();
@@ -30,31 +29,48 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Contact Form Submission
+// Contact Form
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        // Get form values
         const name = contactForm.querySelector('input[type="text"]').value;
         const email = contactForm.querySelector('input[type="email"]').value;
         const message = contactForm.querySelector('textarea').value;
-        
-        // Simple validation
+
         if (name && email && message) {
-            // Show success message
-            alert(`ขอบคุณ ${name}! ได้รับข้อความของคุณแล้ว`);
-            
-            // Reset form
+            alert(`ขอบคุณ ${name}! เราได้รับข้อความของคุณแล้ว\nจะติดต่อกลับโดยเร็ว`);
             contactForm.reset();
         } else {
-            alert('กรุณากรอกข้อมูลทั้งหมด');
+            alert('กรุณากรอกข้อมูลให้ครบถ้วน');
         }
     });
 }
 
-// Add scroll animation for cards
+// Subscribe Buttons
+const subscribeButtons = document.querySelectorAll('.subscribe-btn');
+subscribeButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+        const planName = this.closest('.pricing-card').querySelector('h3').textContent;
+        const price = this.closest('.pricing-card').querySelector('.price').textContent;
+        alert(`สำหรับการสมัครสมาชิก ${planName} (${price})\nกรุณาติดต่อเราผ่าน Email หรือ Telegram`);
+    });
+});
+
+// FAQ Accordion
+const faqItems = document.querySelectorAll('.faq-item');
+faqItems.forEach(item => {
+    item.addEventListener('click', () => {
+        item.classList.toggle('active');
+        faqItems.forEach(otherItem => {
+            if (otherItem !== item) {
+                otherItem.classList.remove('active');
+            }
+        });
+    });
+});
+
+// Add animation on scroll
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -100px 0px'
@@ -69,57 +85,22 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe benefit cards
-document.querySelectorAll('.benefit-card').forEach(card => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(20px)';
-    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(card);
+document.querySelectorAll('.feature-card, .pricing-card, .setup-step, .faq-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
 });
 
-// Observe steps
-document.querySelectorAll('.step').forEach(step => {
-    step.style.opacity = '0';
-    step.style.transform = 'translateY(20px)';
-    step.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(step);
-});
-
-// FAQ Accordion
-const faqItems = document.querySelectorAll('.faq-item');
-faqItems.forEach(item => {
+// Copy to clipboard for server list
+const serverItems = document.querySelectorAll('.server-item');
+serverItems.forEach(item => {
     item.addEventListener('click', () => {
-        // Toggle active class
-        item.classList.toggle('active');
-        
-        // Close other items
-        faqItems.forEach(otherItem => {
-            if (otherItem !== item) {
-                otherItem.classList.remove('active');
-            }
-        });
+        navigator.clipboard.writeText(item.textContent);
+        const originalText = item.textContent;
+        item.textContent = '✓ คัดลอกแล้ว';
+        setTimeout(() => {
+            item.textContent = originalText;
+        }, 1500);
     });
-});
-
-// Add CSS for FAQ active state
-const style = document.createElement('style');
-style.textContent = `
-    .faq-item p {
-        max-height: 500px;
-        overflow: hidden;
-        transition: max-height 0.3s ease, margin-top 0.3s ease;
-    }
-    
-    .faq-item.active h3 {
-        color: var(--accent-color);
-    }
-`;
-document.head.appendChild(style);
-
-// Scroll to top button
-window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY;
-    if (scrollTop > 300) {
-        // Show scroll to top button if you want to add one
-    }
 });
